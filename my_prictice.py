@@ -1,19 +1,19 @@
 import re
 
-def extract_number(s):
-    # 使用正则表达式匹配字符串中的数字部分
-    match = re.search(r'\d+(?:\.\d+)?', s)
+def extract_and_format_number(s):
+    # 匹配字符串中的数字部分，包括可能的小数点和后面的数字
+    match = re.search(r'(\d+)\.?(\d*)', s)
     if match:
-        number_str = match.group()
-        # 如果数字部分包含小数点，则截取小数点后两位
-        if '.' in number_str:
-            return number_str.rstrip('0').rstrip('.')
-        else:
-            # 如果没有小数点，则添加两位0
-            return f"{number_str}.00"
-    return ""
+        integer_part = match.group(1)
+        decimal_part = match.group(2)
+        # 如果小数部分存在，保留两位；如果不存在，添加"00"
+        formatted_decimal = (decimal_part + '00')[:2]
+        return f"{integer_part}.{formatted_decimal}"
+    else:
+        # 如果没有找到数字，理论上不应该发生，因为题目假设字符串包含数字
+        return "No number found"
 
 # 测试代码
 test_strings = ["abcd123.456", "abcd123", "abcd123.", "abcd123.1", "abcd12.34", "abcd"]
 for test in test_strings:
-    print(f"{test} -> {extract_number(test)}")
+    print(f"{test} -> {extract_and_format_number(test)}")
